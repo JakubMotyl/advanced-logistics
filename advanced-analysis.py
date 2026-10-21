@@ -10,8 +10,11 @@ penalty_rates = pd.DataFrame({
     "Delay_Penalty_Cost": [15.0, 30.0, 50.0]
 })
 
+# Perform LEFT JOIN to enrich shipment records with penalty benchmark rates
 df_merged = pd.merge(df, penalty_rates, on="Product_importance", how="left")
 
+# Condition (x == 0) evaluates to True (1) for delayed shipments and False (0) for on-time deliveries,
+# multiplying directly by the rate to zero out costs for compliant shipments.
 df_merged['Total_Delay_Penalty'] = (df_merged['Reached_on_Time_Y_N'] == 0) * df_merged['Delay_Penalty_Cost']
 
 # Export clean datasets to multi-tab Excel report
